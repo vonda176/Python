@@ -1,0 +1,182 @@
+<html>
+<head>
+        <title>Keyloop</title>
+        <link rel="icon" href="/icone.png" />
+        <link rel="stylesheet" href="C:\Users\HakkouA\OneDrive - Keyloop\Documents\keyloop.css"/>
+        
+</head>
+<header>
+    <img src="C:\Users\HakkouA\OneDrive - Keyloop\Documents\keyloop.png" alt="nexus" width="30" height="24">
+</header>
+<body>
+<div id="chatBotOuter">
+  <div id="chatbotWindow">
+    <div class="d-flex align-items-center justify-content-between px-3 py-2 bg-white">
+      <div>
+        Keyloop ChatBot
+      </div>
+      <div>
+        <i class="showPointer fa-solid fa-minus me-3" onclick="toggleWindow()" style="transform:translateY(4px)"></i>
+        <i class="showPointer fa-solid fa-xmark" onclick="endChat()"></i>
+      </div>
+    </div>
+    <div id="chatBody" class="p-3">
+
+    </div>
+    <div class="px-3 py-2 bg-white d-flex align-items-center justify-content-between">
+      <div class="flex-fill">
+        <textarea type="text" id="messageBox" onkeyup="enterPressed(event)" placeholder="Enter Message"></textarea>
+      </div>
+      <div class="ms-3">
+        <i onclick="postMessage()" class="showPointer fa-solid fa-paper-plane"></i>
+      </div>
+    </div>
+
+  </div>
+  <div class="text-end" id="minimalBot">
+    <div><img id="smallBot" onclick="toggleWindow()" class="showPointer removeShadow"
+        src="https://htmljstemplates.com/static_files/images/html/chatbotIconSingle.png" height="72" /></div>
+  </div>
+</div>
+
+
+<div class="container">
+    <div class="left"><img src="C:\Users\HakkouA\OneDrive - Keyloop\Documents\download.png"  alt="Trulli" width="500" height="333"><br></div>
+    <div class="right"><h1>Keyloop Hackathon 2023</h1><br></div>
+</div>
+
+<script>
+  var mbox = document.getElementById('messageBox')
+  var chatBody = document.getElementById('chatBody')
+  var chatbotWindow = document.getElementById('chatbotWindow')
+  var minimalBot = document.getElementById('minimalBot')
+
+  var isMax = false
+  var isInit = true
+  var closeDialog = false
+
+   
+  var qa = {
+    "intro": {
+      "answer": "Hi. This is Keyloop Serti ChatBot. How may I assist you. Please choose from the options below",
+      "related": ["Sales", "AfterSales", "Accounting"]
+    },
+    "Sales": {
+      "answer": "What is your issue with Merlin ?",
+    },
+    "AfterSales": {
+      "answer": "Which area exactly ?",
+      "related": ["Service", "Parts", "Rendez-vous"]
+    },
+    "Service": {
+    "Parts": {
+      "answer": "test",
+
+    },
+    "Rendez-vous": {
+      "answer": "test",
+    },
+    "call": {
+      "answer": "Call us at xxx xxx-xxxx if you have any questions",
+    },
+    "contact": {
+      "answer": "We are at adresse montreal ",
+    },
+    "quote": {
+      "answer": "Call us if it doesn't answer your request"
+    },
+  }
+  window.BE_API = window.BE_API || {};
+window.BE_API.onLoad = () => {
+    window.BE_API.sendMessage({
+        message: 'message',
+        postback: 'postback'
+    })
+}
+ toggleWindow() {
+    if (isInit) {
+      onBotMessage(qa.intro)
+      isInit = false
+    }
+    if (isMax) {
+      chatbotWindow.style.display = "none"
+      minimalBot.style.display = "block"
+    } else {
+      chatbotWindow.style.display = "block"
+      minimalBot.style.display = "none"
+    }
+    isMax = !isMax
+  }
+
+  function getOption(t) {
+    var opt = t.target.innerText.toLowerCase()
+    chatBody.innerHTML += onUserMessage(opt)
+    if (qa[opt] === undefined) return onBotMessage(qa.intro)
+    onBotMessage(qa[opt])
+  }
+
+
+  function closeChat() {
+    chatBody.innerHTML = ""
+    mbox.disabled = false
+    toggleWindow()
+  }
+
+  function cancelClose(id) {
+    mbox.disabled = false
+    document.getElementById(id).remove()
+  }
+
+  function clearScroll() {
+    chatBody.scrollTop = chatBody.scrollHeight
+    mbox.value = ""
+  }
+
+  function enterPressed(e) {
+    if (e.which === 13) postMessage()
+  }
+
+
+
+  function onUserMessage(msg) {
+    return `<div class="userMessageWrap">
+        <div class="userName">User</div>
+        <div class="userMessage rounded">${msg}</div>
+      </div>`
+  }
+
+
+  function onBotMessage(args) {
+    var html = `<div class="botMessageWrap">
+        <div class="botName">Keyloop Serti ChatBot</div>
+        <div class="botMessage rounded">${args.answer}</div>`
+    if (args.related) {
+      html += `<div class="suggestions">`
+      var related = args.related
+      for (var r of related) {
+        html += `<div class="suggest showPointer" onclick="getOption(event)">${r}</div>`
+      }
+      html += `</div>`
+    }
+    html += `</div>`
+    var id = Math.random().toString(36).substring(3)
+    chatBody.innerHTML += spinnerBlock(id)
+    clearScroll()
+    setTimeout(function () {
+      document.getElementById(id).remove()
+      chatBody.innerHTML += html
+      clearScroll()
+    }, 2000)
+  }
+
+
+  function spinnerBlock(id) {
+    return `<div class="spinnerBlock" id="${id}">
+        <div class="spinner-grow" role="status"></div>
+        <div class="spinner-grow" role="status"></div>
+        <div class="spinner-grow" role="status"></div>
+      </div>`
+  }
+</script>
+</body>
+</html>

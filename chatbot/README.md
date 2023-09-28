@@ -42,10 +42,3 @@ To run this Bot, first run the ```train.py``` file to train the model. This will
 This is the model which will be used by the Flask REST API to easily give feedback without the need to retrain.<br>
 After running ```train.py```, next run the ```app.py``` to initialize and start the bot.<br>
 To add more terms and vocabulary to the bot, modify the ```intents.json``` file and add your personalized words and retrain the model again.
-
-# 
-## want something improved or added?
-  > Fork the repo @ [GitHub](https://github.com/mainadennis/An-AI-Chatbot-in-Python-and-Flask).
-# 
-## Regards,
- > [DentriceDev Solutions](https://dentricedev.com).
